@@ -4,7 +4,7 @@
 
 # Book a Restaurant via Chat w/ Function Calling
 
-RestaurantBookingChat is a demonstration of working with function calling in LLMs. The app simulates a restaurant booking assistant that can manage multiple reservations through natural conversation.
+RestaurantBookingChat is a demonstration of using function calling in LLMs to implement a natural language interface to your app's actions. The app simulates a restaurant booking assistant that can manage multiple reservations through natural conversation.
 <br/><br/>
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/PreternaturalAI/AI/blob/main/LICENSE)
 
@@ -60,6 +60,7 @@ The following Preternatural Frameworks were used in this project:
 - [ChatKit](https://github.com/PreternaturalAI/ChatKit/): A protocol-oriented, batteries-included framework for building chat interfaces in Swift.
 
 ## Technical Specifications
+
 
 ## License
 
