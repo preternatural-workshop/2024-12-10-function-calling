@@ -85,29 +85,31 @@ let configuration = RestaurantBookingChatbotConfiguration(
 The `systemPrompt` is specified in the `BookRestaurantFunctionDefinitions` file as follows:
 
 ```swift
-    // Note that the LLM is trained with a cutoff date. So make sure to specify today's date in the system or user prompt for correct interpretation of relative time descriptions such as "tomorrow".
-    static var systemMessageManualResponse: PromptLiteral {
-        """
-        You are a helpful assistant tasked with booking restaurant reservations. 
-        
-        Please gather the following details efficiently:
-        1. Name of the restaurant
-        2. Date of the reservation
-        3. Time of the reservation
-        4. Number of people attending.
-        
-        Rules for calling `book_restaurant`:
-        1. If the user doesn't provide a piece of information, simple pass NULL for that parameter. 
-        2. If the user doesn't provide any information, pass NULL for all parameters.
-        3. Pass NULL for parameters that you don't have the information for. 
-        
-        Always call `book_restaurant`.
-        
-        DO NOT ADD ANY ADDITIONAL INFORMATION. 
-        
-        Today's date is \(Date().mediumStyleDateString)
-        """
-    }
+// BookRestaurantFunctionDefinitions
+
+// Note that the LLM is trained with a cutoff date. So make sure to specify today's date in the system or user prompt for correct interpretation of relative time descriptions such as "tomorrow".
+static var systemMessageManualResponse: PromptLiteral {
+    """
+    You are a helpful assistant tasked with booking restaurant reservations. 
+    
+    Please gather the following details efficiently:
+    1. Name of the restaurant
+    2. Date of the reservation
+    3. Time of the reservation
+    4. Number of people attending.
+    
+    Rules for calling `book_restaurant`:
+    1. If the user doesn't provide a piece of information, simple pass NULL for that parameter. 
+    2. If the user doesn't provide any information, pass NULL for all parameters.
+    3. Pass NULL for parameters that you don't have the information for. 
+    
+    Always call `book_restaurant`.
+    
+    DO NOT ADD ANY ADDITIONAL INFORMATION. 
+    
+    Today's date is \(Date().mediumStyleDateString)
+    """
+}
 ```
 
 The `bookRestaurantFunction` definition includes all the necessary parameters to call the `book_restaurant` function. Notice that every parameter is set to NOT required. The goal is to return a manual message to the user based on which parameters are missing. 
@@ -115,43 +117,44 @@ The `bookRestaurantFunction` definition includes all the necessary parameters to
 ```swift
 // BookRestaurantFunctionDefinitions
 
-  static let bookRestaurantFunction = AbstractLLM.ChatFunctionDefinition(
-      name: "book_restaurant",
-      context: "Make a restaurant booking",
-      parameters: JSONSchema(
-          type: .object,
-          description: "Required data to make a restaurant booking",
-          properties: [
-              "restaurant_name": JSONSchema(
-                  type: .string,
-                  description: "The name of the restaurant",
-                  required: false
-              ),
-              "reservation_date" : JSONSchema(
-                  type: .string,
-                  description: "The date of the restaurant booking in yyyy-MM-dd format. Should be a date with a year, month, day. NOTHING ELSE",
-                  required: false
-              ),
-              "reservation_time" : JSONSchema(
-                  type: .string,
-                  description: "The time of the reservation in HH:mm format. Should include hours and minutes. NOTHING ELSE",
-                  required: false
-              ),
-              "number_of_guests" : JSONSchema(
-                  type: .integer,
-                  description: "The total number of people the reservation is for",
-                  required: false
-              )
-          ],
-          required: false
-      )
-  )
+static let bookRestaurantFunction = AbstractLLM.ChatFunctionDefinition(
+    name: "book_restaurant",
+    context: "Make a restaurant booking",
+    parameters: JSONSchema(
+        type: .object,
+        description: "Required data to make a restaurant booking",
+        properties: [
+            "restaurant_name": JSONSchema(
+                type: .string,
+                description: "The name of the restaurant",
+                required: false
+            ),
+            "reservation_date" : JSONSchema(
+                type: .string,
+                description: "The date of the restaurant booking in yyyy-MM-dd format. Should be a date with a year, month, day. NOTHING ELSE",
+                required: false
+            ),
+            "reservation_time" : JSONSchema(
+                type: .string,
+                description: "The time of the reservation in HH:mm format. Should include hours and minutes. NOTHING ELSE",
+                required: false
+            ),
+            "number_of_guests" : JSONSchema(
+                type: .integer,
+                description: "The total number of people the reservation is for",
+                required: false
+            )
+        ],
+        required: false
+    )
+)
 ```
 
 The `bookRestaurant` function is called via the `LLMManager`:
 
 ```swift
 // LLMManager
+
 func bookRestaurant(
     from chat: Chat
 ) async -> BookRestaurantFunctionParameters {
